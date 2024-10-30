@@ -4,6 +4,6 @@
                  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee /src/main/resources/web-app_3_1.xsd">
     <web-app:display-name>Java Faces CRUD</web-app:display-name>
     <web-app:welcome-file-list>
-        <web-app:welcome-file>index.jsp</web-app:welcome-file>
+        <web-app:welcome-file>tickets.jsp</web-app:welcome-file>
     </web-app:welcome-file-list>
 </web-app>
