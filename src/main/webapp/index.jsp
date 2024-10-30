@@ -6,7 +6,7 @@
     <title>Welcome to Java Faces CRUD</title>
 </head>
 <body>
-    <h1>Welcome to the Java Faces CRUD Application 4</h1>
+    <h1>Welcome to the Java Faces CRUD Application 5</h1>
     <p>This is a basic welcome page to start exploring the project setup.</p>
 </body>
 </html>
