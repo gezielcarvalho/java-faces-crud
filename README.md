@@ -43,9 +43,9 @@ less +F /path/to/tomcat/logs/catalina.out
 # GitBash Example: less +F /c/ProgramFiles/Java/apache-tomcat-9/logs/catalina.out
 ```
 
-The "Status" column has values of **yes** (if present in `pom.xml`), **no** (if listed in the table but not in `pom.xml`), or **new** (if present in `pom.xml` but not in the table).
-
 # Project Dependencies and Plugins
+
+The "Status" column has values of **yes** (if present in `pom.xml`), **no** (if listed in the table but not in `pom.xml`), or **new** (if present in `pom.xml` but not in the table).
 
 | Type             | Name                  | Version     | Description                                                   | Status |
 | ---------------- | --------------------- | ----------- | ------------------------------------------------------------- | ------ |
@@ -103,7 +103,7 @@ The "Status" column has values of **yes** (if present in `pom.xml`), **no** (if 
 |                  | drools-core           | Latest      | Core components for the Drools rule engine.                   | no     |
 |                  | jasypt-hibernate3     | 1.9.0       | Encryption library for Hibernate data.                        | no     |
 |                  | super-csv             | 2.2.1       | CSV parsing library for Java.                                 | no     |
-|                  | slf4j-log4j12         | 1.7.36      | SLF4J binding for Log4j.                                      | no     |
-|                  | log4j-api             | 2.17.1      | API for Log4j logging framework.                              | no     |
+|                  | slf4j-log4j12         | 1.7.36      | SLF4J binding for Log4j.                                      | yes    |
+|                  | log4j-api             | 2.17.1      | API for Log4j logging framework.                              | yes    |
 |                  | flyway-core           | 9.0.0       | Library for managing database migrations.                     | new    |
 |                  | flyway-mysql          | 9.0.0       | MySQL-specific Flyway support.                                | new    |
