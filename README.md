@@ -1,3 +1,48 @@
+# Java Faces Project
+
+This project is a Java web application that uses JavaServer Faces (JSF) for the user interface. The project is built with Maven and uses Hibernate for database interaction. The project is configured to deploy to a Tomcat 7 server.
+
+# Project Structure
+
+The project is structured as follows:
+
+- **src/main/java**: Contains Java source code.
+- **src/main/resources**: Contains configuration files and resources.
+- **src/main/webapp**: Contains web resources (JSP, CSS, JavaScript, etc.).
+- **src/test/java**: Contains unit tests.
+- **src/test/resources**: Contains test resources.
+- **target**: Contains build output (compiled classes, JARs, WARs, etc.).
+- **pom.xml**: Maven project configuration file.
+- **README.md**: This file.
+
+# Project Setup
+
+To build the project, run the following command:
+
+```bash
+mvn clean install
+```
+
+This command will compile the source code, run unit tests, and package the application into a WAR file. The WAR file will be located in the `target` directory.
+
+To deploy the application to a Tomcat 7 server, run the following command:
+
+```bash
+mvn tomcat7:deploy
+```
+
+This command will deploy the application to the Tomcat 7 server configured in the `pom.xml` file.
+
+# Monitoring the logs
+
+To monitor the logs, you can use the following command:
+
+```bash
+less +F /path/to/tomcat/logs/catalina.out
+
+# GitBash Example: less +F /c/ProgramFiles/Java/apache-tomcat-9/logs/catalina.out
+```
+
 The "Status" column has values of **yes** (if present in `pom.xml`), **no** (if listed in the table but not in `pom.xml`), or **new** (if present in `pom.xml` but not in the table).
 
 # Project Dependencies and Plugins
