@@ -17,6 +17,14 @@ The project is structured as follows:
 
 # Project Setup
 
+Make sure your Tomcat server is running and accessible. You can start the server by running the following command:
+
+```bash
+/path/to/tomcat/bin/startup.sh
+
+# GitBash Example: /c/ProgramFiles/Java/apache-tomcat-9/bin/startup.sh
+```
+
 To build the project, run the following command:
 
 ```bash
@@ -29,6 +37,14 @@ To deploy the application to a Tomcat 7 server, run the following command:
 
 ```bash
 mvn tomcat7:deploy
+```
+
+When you don't need the Tomcat server anymore, you can stop it by running the following command:
+
+```bash
+/path/to/tomcat/bin/shutdown.sh
+
+# GitBash Example: /c/ProgramFiles/Java/apache-tomcat-9/bin/shutdown.sh
 ```
 
 This command will deploy the application to the Tomcat 7 server configured in the `pom.xml` file.
@@ -45,7 +61,7 @@ less +F /path/to/tomcat/logs/catalina.out
 
 # Project Dependencies and Plugins
 
-The "Status" column has values of **yes** (if present in `pom.xml`), **no** (if listed in the table but not in `pom.xml`), or **new** (if present in `pom.xml` but not in the table).
+The "Status" column has values of **yes** (if present in `pom.xml`), **no** (if listed in the table but not in `pom.xml`), or **new** (if present in `pom.xml` but not in the original list of dependencies).
 
 | Type             | Name                  | Version     | Description                                                   | Status |
 | ---------------- | --------------------- | ----------- | ------------------------------------------------------------- | ------ |
