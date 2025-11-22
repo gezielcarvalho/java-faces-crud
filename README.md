@@ -1,29 +1,206 @@
-# Java Faces Project
+# Java Faces CRUD - Helpdesk Ticket Management
 
-This project is a Java web application that uses JavaServer Faces (JSF) for the user interface. The project is built with Maven and uses Hibernate for database interaction. The project is configured to deploy to a Tomcat 7 server.
+A Java web application for managing helpdesk tickets, built with JavaServer Pages (JSP), JPA/Hibernate, and MySQL. This project demonstrates CRUD operations, database migration management with Flyway, and deployment to Tomcat servers.
 
-# Project Structure
+## Overview
 
-The project is structured as follows:
+This application provides a simple ticket management system where users can:
 
-- **src/main/java**: Contains Java source code.
-- **src/main/resources**: Contains configuration files and resources.
-- **src/main/webapp**: Contains web resources (JSP, CSS, JavaScript, etc.).
-- **src/test/java**: Contains unit tests.
-- **src/test/resources**: Contains test resources.
-- **target**: Contains build output (compiled classes, JARs, WARs, etc.).
-- **pom.xml**: Maven project configuration file.
-- **README.md**: This file.
+- View all helpdesk tickets
+- Track ticket status (OPEN, IN_PROGRESS, RESOLVED, CLOSED)
+- Manage tickets with full CRUD operations
+- Persist data using JPA/Hibernate with MySQL
 
-# Project Setup
+## Technology Stack
+
+- **Java**: 21
+- **Build Tool**: Maven
+- **Web Framework**: JavaServer Pages (JSP)
+- **ORM**: Hibernate 5.4.30 (JPA 2.2)
+- **Database**: MySQL 8.0.20
+- **Migration Tool**: Flyway 9.0.0
+- **Logging**: SLF4J with Log4j2
+- **Server**: Apache Tomcat 7+
+
+## Project Structure
+
+```
+java-faces-crud/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── info/gezielcarvalho/
+│   │   │       ├── entity/
+│   │   │       │   ├── Ticket.java       # JPA Entity for tickets
+│   │   │       │   └── Status.java       # Enum for ticket status
+│   │   │       └── service/
+│   │   │           └── TicketService.java # Service layer for ticket operations
+│   │   ├── resources/
+│   │   │   ├── db/migration/
+│   │   │   │   └── V1__Create_And_Seed_Tickets_Table.sql
+│   │   │   ├── META-INF/
+│   │   │   │   └── persistence.xml       # JPA configuration
+│   │   │   ├── log4j2.xml               # Logging configuration
+│   │   │   └── import.sql               # Data initialization
+│   │   └── webapp/
+│   │       ├── index.jsp                # Landing page
+│   │       ├── tickets.jsp              # Ticket list view
+│   │       └── WEB-INF/
+│   │           └── web.xml              # Web application descriptor
+│   └── test/java/                       # Unit tests
+├── pom.xml                              # Maven configuration
+└── README.md
+```
+
+## Prerequisites
+
+### Traditional Deployment
+
+- **Java Development Kit (JDK)**: 21 or higher
+- **Apache Maven**: 3.6+ for building the project
+- **Apache Tomcat**: 7+ (Tomcat 9 recommended) for deployment
+- **MySQL**: 8.0+ database server
+- **Git**: For version control
+
+### Docker Deployment (Recommended)
+
+- **Docker**: 20.10+
+- **Docker Compose**: 2.0+
+
+> 📦 **Quick Start with Docker**: See [Docker Deployment](#docker-deployment-recommended) section below for the fastest way to run this application.
+
+## Database Setup
+
+1. **Install MySQL** (if not already installed)
+
+2. **Create the database**:
+
+   ```sql
+   CREATE DATABASE helpdesk;
+   ```
+
+3. **Configure database credentials** in two locations:
+
+   **a. JPA Configuration** (`src/main/resources/META-INF/persistence.xml`):
+
+   ```xml
+   <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/helpdesk"/>
+   <property name="javax.persistence.jdbc.user" value="root"/>
+   <property name="javax.persistence.jdbc.password" value="YOUR_PASSWORD"/>
+   ```
+
+   **b. Flyway Configuration** (`pom.xml`):
+
+   ```xml
+   <flyway.url>jdbc:mysql://localhost:3306/helpdesk</flyway.url>
+   <flyway.user>root</flyway.user>
+   <flyway.password>YOUR_PASSWORD</flyway.password>
+   ```
+
+4. **Run Flyway migration** to create tables and seed data:
+   ```bash
+   mvn flyway:migrate
+   ```
+
+## Docker Deployment (Recommended)
+
+The easiest way to run this application is using Docker Compose, which handles all dependencies automatically.
+
+### Quick Start
+
+1. **Ensure Docker is running**
+
+2. **Start the application stack**:
+
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Access the application**:
+
+   - **Home**: http://localhost:8080/java-faces-crud/
+   - **Tickets List**: http://localhost:8080/java-faces-crud/tickets.jsp
+
+4. **View logs**:
+
+   ```bash
+   docker compose logs -f
+   ```
+
+5. **Stop the application**:
+   ```bash
+   docker compose down
+   ```
+
+### What Docker Compose Does
+
+- ✅ Starts MySQL 8.0 database
+- ✅ Runs Flyway migrations automatically
+- ✅ Builds and deploys the Java application
+- ✅ Configures networking between services
+- ✅ Sets up persistent storage for database
+
+### Docker Commands
+
+```bash
+# View running containers
+docker compose ps
+
+# Rebuild after code changes
+docker compose up -d --build
+
+# View application logs
+docker compose logs -f app
+
+# View database logs
+docker compose logs -f mysql
+
+# Stop and remove all containers
+docker compose down
+
+# Stop and remove containers + volumes (clears database)
+docker compose down -v
+
+# Access MySQL shell
+docker exec -it helpdesk-mysql mysql -uroot -pA_1234567 helpdesk
+```
+
+### Environment Variables
+
+You can customize the database configuration by setting environment variables:
+
+```bash
+DB_HOST=mysql \
+DB_PORT=3306 \
+DB_NAME=helpdesk \
+DB_USER=root \
+DB_PASSWORD=your_password \
+docker compose up -d
+```
+
+📖 **For detailed Docker documentation**, see [DOCKER.md](DOCKER.md)
+
+---
+
+## Project Setup (Traditional Deployment)
+
+> 💡 **Prefer Docker?** Skip this section and use the [Docker Deployment](#docker-deployment-recommended) method above.
+
+### 1. Start Tomcat Server
 
 Make sure your Tomcat server is running and accessible. You can start the server by running the following command:
 
 ```bash
 /path/to/tomcat/bin/startup.sh
 
-# GitBash Example: /c/ProgramFiles/Java/apache-tomcat-9/bin/startup.sh
+# Windows GitBash Example:
+/c/Program\ Files/Java/apache-tomcat-9/bin/startup.sh
+
+# Windows Command Prompt:
+C:\Program Files\Java\apache-tomcat-9\bin\startup.bat
 ```
+
+### 2. Build the Project
 
 To build the project, run the following command:
 
@@ -33,93 +210,223 @@ mvn clean install
 
 This command will compile the source code, run unit tests, and package the application into a WAR file. The WAR file will be located in the `target` directory.
 
-To deploy the application to a Tomcat 7 server, run the following command:
+### 3. Deploy to Tomcat
+
+**Option A: Using Maven Plugin**
 
 ```bash
 mvn tomcat7:deploy
 ```
+
+**Option B: Manual Deployment**
+Copy the generated WAR file to Tomcat's webapps directory:
+
+```bash
+cp target/java-faces-crud-1.1-SNAPSHOT.war /path/to/tomcat/webapps/java-faces-crud.war
+```
+
+### 4. Access the Application
+
+Once deployed, access the application at:
+
+- **Home**: http://localhost:8080/java-faces-crud/
+- **Tickets List**: http://localhost:8080/java-faces-crud/tickets.jsp
+
+### 5. Stop Tomcat Server
 
 When you don't need the Tomcat server anymore, you can stop it by running the following command:
 
 ```bash
 /path/to/tomcat/bin/shutdown.sh
 
-# GitBash Example: /c/ProgramFiles/Java/apache-tomcat-9/bin/shutdown.sh
+# Windows GitBash Example:
+/c/Program\ Files/Java/apache-tomcat-9/bin/shutdown.sh
+
+# Windows Command Prompt:
+C:\Program Files\Java\apache-tomcat-9\bin\shutdown.bat
 ```
 
-This command will deploy the application to the Tomcat 7 server configured in the `pom.xml` file.
+## Monitoring and Logging
 
-# Monitoring the logs
+### View Application Logs
 
-To monitor the logs, you can use the following command:
+To monitor the logs in real-time, use the following command:
 
 ```bash
 less +F /path/to/tomcat/logs/catalina.out
 
-# GitBash Example: less +F /c/ProgramFiles/Java/apache-tomcat-9/logs/catalina.out
+# Windows GitBash Example:
+less +F /c/Program\ Files/Java/apache-tomcat-9/logs/catalina.out
 ```
 
-# Project Dependencies and Plugins
+### Log Configuration
 
-The "Status" column has values of **yes** (if present in `pom.xml`), **no** (if listed in the table but not in `pom.xml`), or **new** (if present in `pom.xml` but not in the original list of dependencies).
+The application uses Log4j2 for logging. Configuration is in `src/main/resources/log4j2.xml`. Current logging includes:
 
-| Type             | Name                  | Version     | Description                                                   | Status |
-| ---------------- | --------------------- | ----------- | ------------------------------------------------------------- | ------ |
-| **Plugins**      |                       |             |                                                               |        |
-|                  | maven-surefire-plugin | Latest      | Runs unit tests as part of the build process.                 | no     |
-|                  | maven-jetty-plugin    | 6.1.11      | Enables running web applications in Jetty during development. | no     |
-|                  | maven-compiler-plugin | 1.8         | Compiles source code with specified Java version.             | no     |
-|                  | maven-eclipse-plugin  | 2.9         | Integrates Maven projects with Eclipse IDE.                   | no     |
-|                  | maven-war-plugin      | 3.3.1       | Packages applications into WAR files for deployment.          | no     |
-|                  | tomcat7-maven-plugin  | 2.2         | Deploys applications to Tomcat 7 server.                      | yes    |
-|                  | tomcat-maven-plugin   | 2.2         | Configures and deploys Tomcat instances.                      | no     |
-|                  | maven-t7-plugin       | 0.9.18      | Simplifies Tomcat 7 setup and deployment.                     | no     |
-|                  | flyway-maven-plugin   | 9.0.0       | Manages database migrations.                                  | new    |
-| **Extensions**   |                       |             |                                                               |        |
-|                  | wagon-ftp             | 1.0-beta-6  | Provides FTP support for file transfer in Maven.              | no     |
-| **Dependencies** |                       |             |                                                               |        |
-|                  | xercesImpl            | 2.11.0      | XML parser for Java, supporting DOM, SAX, and JAXP.           | no     |
-|                  | javamelody-core       | 1.74.0      | Monitors Java applications in production.                     | no     |
-|                  | ecj                   | 4.4         | Eclipse Compiler for Java.                                    | no     |
-|                  | mve12                 | 2.1.8.final | Maven integration for enterprise applications.                | no     |
-|                  | joda-time             | 1.6         | Provides advanced date and time management.                   | no     |
-|                  | xstream               | 1.4.20      | Converts Java objects to XML and back.                        | no     |
-|                  | jrobin                | 1.5.9       | A Java implementation of RRDTool for time-series data.        | no     |
-|                  | itext                 | 2.1.7       | PDF creation library.                                         | no     |
-|                  | jakarta-xml-bind-api  | 2.3.3       | XML binding for Java API.                                     | no     |
-|                  | javax.servlet-api     | 4.0.1       | Java Servlet API for building web applications.               | yes    |
-|                  | el-api                | 1.0         | Expression Language API used in JSPs.                         | no     |
-|                  | jboss-seam-mail       | Latest      | Provides email support for JBoss Seam applications.           | no     |
-|                  | testng                | 5.8         | Testing framework for Java applications.                      | no     |
-|                  | c3p0                  | 0.9.1.2     | JDBC connection pooling library.                              | no     |
-|                  | hibernate-cp30        | 3.6.8       | C3P0 integration with Hibernate ORM.                          | no     |
-|                  | mysql-connector-java  | 8.0.20      | MySQL JDBC driver for database connectivity.                  | yes    |
-|                  | commons-logging       | 1.1.1       | Logging facade for Java applications.                         | no     |
-|                  | commons-lang          | 2.4         | Utilities for manipulating core Java classes.                 | no     |
-|                  | jboss-seam            | Latest      | Framework for integrating Java EE and Web applications.       | no     |
-|                  | jboss-el              | Latest      | Expression Language implementation for JBoss.                 | no     |
-|                  | jboss-seam-ui         | Latest      | UI components for JBoss Seam.                                 | no     |
-|                  | hibernate-jpa-2.0-api | 1.0.0.Final | Java Persistence API for Hibernate.                           | no     |
-|                  | hibernate-core        | Latest      | Core Hibernate ORM framework for database interaction.        | yes    |
-|                  | hibernate-envers      | Latest      | Audit trail support for Hibernate entities.                   | no     |
-|                  | solr-common           | 1.3.0       | Common library for Apache Solr.                               | no     |
-|                  | solr-core             | 1.4.0       | Core search functionalities for Apache Solr.                  | no     |
-|                  | lucene-snowball       | 3.0.3       | Stemming library for Apache Lucene.                           | no     |
-|                  | quartz                | 1.8.5       | Scheduling library for Java applications.                     | no     |
-|                  | commons-pool          | 1.5.6       | Pooling utilities for Java objects.                           | no     |
-|                  | bsh                   | 1.3.0       | BeanShell scripting language for Java.                        | no     |
-|                  | commons-collections   | 3.2         | Java collections framework utilities.                         | no     |
-|                  | jsf-api               | 1.2_15      | JavaServer Faces API for UI components.                       | no     |
-|                  | jsf-impl              | 1.2_15      | JSF implementation for web applications.                      | no     |
-|                  | jstl                  | 1.2         | JSP Standard Tag Library.                                     | no     |
-|                  | slf4j-api             | 1.7.36      | Simple Logging Facade for Java.                               | no     |
-|                  | log4j-slf4j-impl      | 2.17.2      | Log4j integration with SLF4J.                                 | no     |
-|                  | jasperreports         | 4.5.1       | Reporting library for Java applications.                      | no     |
-|                  | poi                   | 3.7         | Library for manipulating Microsoft Office documents.          | no     |
-|                  | drools-core           | Latest      | Core components for the Drools rule engine.                   | no     |
-|                  | jasypt-hibernate3     | 1.9.0       | Encryption library for Hibernate data.                        | no     |
-|                  | super-csv             | 2.2.1       | CSV parsing library for Java.                                 | no     |
-|                  | slf4j-log4j12         | 1.7.36      | SLF4J binding for Log4j.                                      | yes    |
-|                  | log4j-api             | 2.17.1      | API for Log4j logging framework.                              | yes    |
-|                  | flyway-core           | 9.0.0       | Library for managing database migrations.                     | new    |
-|                  | flyway-mysql          | 9.0.0       | MySQL-specific Flyway support.                                | new    |
+- SQL queries (via `hibernate.show_sql`)
+- Service layer operations
+- Database interactions
+
+## Database Migrations
+
+This project uses **Flyway** for database version control and migrations.
+
+### Available Flyway Commands
+
+```bash
+# Run all pending migrations
+mvn flyway:migrate
+
+# Get migration status
+mvn flyway:info
+
+# Validate applied migrations
+mvn flyway:validate
+
+# Clean database (use with caution!)
+mvn flyway:clean
+```
+
+### Migration Files
+
+Migration scripts are located in `src/main/resources/db/migration/`:
+
+- `V1__Create_And_Seed_Tickets_Table.sql` - Initial schema and sample data
+
+## Core Features
+
+### Entity Model
+
+**Ticket Entity** (`info.gezielcarvalho.entity.Ticket`):
+
+- `id`: Auto-generated primary key
+- `title`: Ticket title (VARCHAR 255)
+- `description`: Detailed description (TEXT)
+- `status`: Ticket status (ENUM)
+- `createdDate`: Timestamp of creation
+
+**Status Enum** (`info.gezielcarvalho.entity.Status`):
+
+- `OPEN` - New ticket
+- `IN_PROGRESS` - Being worked on
+- `RESOLVED` - Solution implemented
+- `CLOSED` - Completed and closed
+
+### Service Layer
+
+**TicketService** (`info.gezielcarvalho.service.TicketService`):
+
+- `getAllTickets()` - Retrieve all tickets from database
+- `createTicket(Ticket)` - Persist new ticket
+
+## Maven Configuration
+
+### Build Properties
+
+```xml
+<maven.compiler.source>21</maven.compiler.source>
+<maven.compiler.target>21</maven.compiler.target>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+```
+
+### Key Dependencies
+
+| Dependency            | Version | Purpose                               |
+| --------------------- | ------- | ------------------------------------- |
+| javax.servlet-api     | 4.0.1   | Java Servlet API (provided by Tomcat) |
+| javax.persistence-api | 2.2     | JPA API for object-relational mapping |
+| hibernate-core        | 5.4.30  | JPA implementation and ORM framework  |
+| mysql-connector-java  | 8.0.20  | MySQL JDBC driver                     |
+| flyway-core           | 9.0.0   | Database migration framework          |
+| flyway-mysql          | 9.0.0   | MySQL-specific Flyway support         |
+| slf4j-api             | 1.7.36  | Logging facade                        |
+| log4j-slf4j-impl      | 2.17.2  | Log4j2 binding for SLF4J              |
+| log4j-api             | 2.17.2  | Log4j2 API                            |
+| log4j-core            | 2.17.2  | Log4j2 implementation                 |
+
+### Maven Plugins
+
+| Plugin               | Version | Purpose                    |
+| -------------------- | ------- | -------------------------- |
+| tomcat7-maven-plugin | 2.2     | Deploy to Tomcat server    |
+| flyway-maven-plugin  | 9.0.0   | Manage database migrations |
+
+## Troubleshooting
+
+### Common Issues
+
+**1. Database Connection Errors**
+
+- Verify MySQL is running: `mysql -u root -p`
+- Check credentials in `persistence.xml` and `pom.xml`
+- Ensure database `helpdesk` exists
+
+**2. Tomcat Deployment Failures**
+
+- Verify Tomcat is running on port 8080
+- Check Tomcat manager credentials in Maven settings (`~/.m2/settings.xml`)
+- Ensure no port conflicts
+
+**3. Build Failures**
+
+- Verify Java 21 is installed: `java -version`
+- Clean Maven cache: `mvn clean`
+- Update dependencies: `mvn dependency:resolve`
+
+**4. Migration Errors**
+
+- Check Flyway configuration in `pom.xml`
+- Verify migration files in `src/main/resources/db/migration/`
+- Review migration status: `mvn flyway:info`
+
+## Development Workflow
+
+1. **Make code changes**
+2. **Run Flyway migrations** (if database schema changed):
+   ```bash
+   mvn flyway:migrate
+   ```
+3. **Build the project**:
+   ```bash
+   mvn clean package
+   ```
+4. **Deploy to Tomcat**:
+   ```bash
+   mvn tomcat7:redeploy
+   ```
+5. **Test the application** at http://localhost:8080/java-faces-crud/tickets.jsp
+
+## Future Enhancements
+
+Potential improvements for this project:
+
+- Implement full CRUD operations (Update, Delete)
+- Add form validation
+- Implement user authentication and authorization
+- Add REST API endpoints
+- Migrate to modern frameworks (Spring Boot, JSF 2.3+)
+- Add comprehensive unit and integration tests
+- Implement pagination for ticket list
+- Add search and filter capabilities
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is available for educational purposes.
+
+## Contact
+
+**Author**: Geziel Carvalho  
+**Repository**: https://github.com/gezielcarvalho/java-faces-crud
+
+---
+
+**Version**: 1.1-SNAPSHOT  
+**Last Updated**: November 2025
