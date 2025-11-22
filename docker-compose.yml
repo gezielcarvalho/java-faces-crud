@@ -1,0 +1,80 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: helpdesk-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: A_1234567
+      MYSQL_DATABASE: helpdesk
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/main/resources/db/migration:/docker-entrypoint-initdb.d
+    networks:
+      - helpdesk-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uroot",
+          "-pA_1234567",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Flyway Migration
+  flyway:
+    image: flyway/flyway:9.0.0
+    container_name: helpdesk-flyway
+    command: migrate
+    environment:
+      FLYWAY_URL: jdbc:mysql://mysql:3306/helpdesk?allowPublicKeyRetrieval=true&useSSL=false
+      FLYWAY_USER: root
+      FLYWAY_PASSWORD: A_1234567
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+      FLYWAY_BASELINE_ON_MIGRATE: "true"
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    networks:
+      - helpdesk-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # Java Faces CRUD Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: helpdesk-app
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: helpdesk
+      DB_USER: root
+      DB_PASSWORD: A_1234567
+    ports:
+      - "8080:8080"
+    networks:
+      - helpdesk-network
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+networks:
+  helpdesk-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
